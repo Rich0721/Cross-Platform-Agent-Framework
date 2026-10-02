@@ -63,6 +63,10 @@ agent-config/
 ```
 
 如果工作過程中因`需求文件`未完整導致Agent無法進行相關設計的話，它會列出相對問題請使用者補充完整，才有辦法進行分析，否則將無法進行Programmer的動作。
+呼叫Agent可以參考下列輸入(並且引入參考需求):
+```text
+請開始需求分析與系統設計設計
+```
 
 
 ### Programmer Agent
@@ -84,6 +88,10 @@ agent-config/
             ▼
   完成程式開發與實作
 ```
+呼叫Agent可以參考下列輸入(並且引入參考的計畫):
+```text
+請開始進行開發
+```
 
 ### Code Review Agent
 此Agent主要負責程式碼審查與品質控制，根據Programmer Agent提交的程式碼進行審查，並提出改進建議(Feature/Review)給Programmer Agent。
@@ -103,6 +111,10 @@ agent-config/
             |
             ▼
   完成程式碼審查
+```
+呼叫Agent可以參考下列輸入(並且引入參考的計畫):
+```text
+請開始進行Code Reivew
 ```
 
 ## Skills
