@@ -1,3 +1,8 @@
+---
+name: typescript
+description: 開發、修改、除錯或審查 TypeScript 程式碼時使用。只提供 TypeScript 共通規範，可獨立使用或搭配 JavaScript／React SKILL；純語言工作不適用。
+---
+
 # TypeScript Skill
 
 ## Overview
