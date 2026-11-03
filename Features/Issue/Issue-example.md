@@ -4,8 +4,8 @@
 
 | Task ID | Issue Date |Status | Description |
 |---------|-----------|--------|-------------|
-| T123    | 2024-06-01 | Open   | Example issue description |
-| T124    | 2024-06-02 | Closed | Another example issue |
+| T123    | 2024-06-01 | OPEN  | Example issue description |
+| T124    | 2024-06-02 | RESOLVED | Another example issue |
 
 
 ## Details

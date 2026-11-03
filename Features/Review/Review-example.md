@@ -1,12 +1,19 @@
-# <Task ID> Code Review
+# <Feature Name> Code Review
 
-Status: OPEN
+## Summary
 
-## Task ID
+描述Code Review 的摘要。
+| Task ID | Issue Date |Status | Description |
+|---------|-----------|--------|-------------|
+| T123    | 2024-06-01 | OPEN   | Example issue description |
+| T124    | 2024-06-02 | RESOLVED | Another example issue |
 
-TASK-XXX
+## Details
 
-## Review Result
+### <Task ID>
+
+
+### Review Result
 
 描述本次 Code Review 的結果。
 
@@ -18,29 +25,29 @@ TASK-XXX
 - Existing Architecture Violation。
 - Error Handling Problem。
 
-## Implementation Plan
+### Implementation Plan
 
 描述目前 Implementation Plan 對此 Task 的主要定義。
 
-## Existing Implementation
+### Existing Implementation
 
 描述 Programmer Agent 目前實作的行為。
 
-## Review Issue
+### Review Issue
 
 描述 Code Review 發現的問題。
 
-## Expected Behavior
+### Expected Behavior
 
 描述依照 Implementation Plan、Project Architecture 或 Code Standards 應有的行為。
 
-## Suggested Area To Fix
+### Suggested Area To Fix
 
 提供 Programmer Agent 建議檢查或修正的範圍。
 
 此處僅提供修正範圍，不指定不必要的 Implementation Method。
 
-## Resolution
+### Resolution
 
 Code Reviewer 在重新審查後填寫。
 
