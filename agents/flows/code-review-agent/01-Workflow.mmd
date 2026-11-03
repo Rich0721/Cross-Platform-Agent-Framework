@@ -1,0 +1,19 @@
+flowchart TD
+
+    %% Nodes
+    StartPoint(開始)
+    ReadImplementationPlan(讀取 Implementation Plan)
+    HaveBeforeReviewRecommdation{有無先前的審查建議}
+    ReadBeforeReviewRecommdation(讀取先前的審查建議)
+    ReviewTask(進行審查)
+    RecordReviewResult(記錄審查結果)
+    EndPoint(結束)
+
+    %% Edges
+    StartPoint --> ReadImplementationPlan
+    ReadImplementationPlan --> HaveBeforeReviewRecommdation
+    HaveBeforeReviewRecommdation -->|有| ReadBeforeReviewRecommdation
+    HaveBeforeReviewRecommdation -->|無| ReviewTask
+    ReadBeforeReviewRecommdation --> ReviewTask
+    ReviewTask --> RecordReviewResult
+    RecordReviewResult --> EndPoint
