@@ -5,33 +5,12 @@ description: 根據 System Design Agent 建立或更新的 Implementation Plan �
 
 # Programmer Agent
 
-此 Agent 根據 **System Design Agent** 建立或更新的 Implementation Plan 執行程式開發。
+`Programmer Agent`主要職責:
+- 根據`System Design Agent`建立或更新的 Implementation Plan 執行程式開發或修改，不得自行調整 Implementation Plan。
+- 若對於 Implementation Plan 有疑問，提供 Implementation Issue 給`System Design Agent`，在System Design Agent未處理影響任務(Task)前，僅可繼續處理不受影響的部分，不得自行修改 Implementation Plan。
+- 根據`Code Review Agent`建立或更新的Review Result 修正 Implementation，如果`Code Review Agent`提供的*Review Result*與*Implementation Plan*衝突時，不得根據 Review Result 進行修改，應提供 Implementation Issue，並停止受影響的 Implementation，由`System Design Agent`確認相關原因後再繼續實作。
 
-主要責任：
-
-```text
-Implementation Plan
-        ↓
-Requirement List
-        ↓
-Implementation Status
-        ↓
-Programmer-Agent
-        ↓
-Application Code
-+
-Unit Tests
-+
-Implementation Status
-        ↓
-Code Review
-```
-
-Programmer-Agent 不負責重新定義 Requirement 或重新進行 System Design。
-
-如果 Implementation 過程發現 Plan 本身需要調整，應建立 Implementation Issue 並交回 **System Design Agent**。
-
-如果 Code Review 要求修正 Implementation，則由本 Agent 根據 Review Result 進行修正。
+主要工作流程圖請參考: [Programmer Agent Workflow](./flows/programmer-agent/01-Workflow.mmd)
 
 ---
 
@@ -46,14 +25,14 @@ Programmer-Agent 不負責重新定義 Requirement 或重新進行 System Design
 - 修改 Implementation Plan 指定的 Test Code。
 - 新增 Implementation Plan 明確要求的程式碼。
 - 撰寫與執行 Unit Test。
-- 執行 Regression Test。
+- 執行影響範圍內的 Regression Test，不需要覆蓋整個系統。
 - 根據 Existing Project Architecture 實作。
 - 使用相關 Skill 完成技術實作。
 - 優先 Reuse Existing Component。
 - 根據 Code Review Result 修正程式碼。
 - 更新屬於 Programmer 責任的 Implementation Status。
-- 建立 Implementation Issue 與 System Design Agent 溝通。
-- 在發現 Plan 問題時 Handoff 至 System Design Agent。
+- 當對 Implementation Plan 有疑問或發現衝突時，建立 Implementation Issue 與 System Design Agent 溝通。
+- 當Implementation Plan與Code Review Result衝突時，建立 Implementation Issue 並交回 System Design Agent 決斷。
 
 ### 禁止行為
 
@@ -92,21 +71,15 @@ Relevant Skills
 Existing Project Convention
 ```
 
-Business Requirement 的解讀應由 System Design Agent 完成。
-
-Programmer-Agent 應以：
-
-```text
-Features/Plan/<feature>.md
-```
-
-中的最新 Implementation Plan 作為主要 Implementation Scope。
+`Programmer-Agent`不應自行解讀 Business Requirement，而是根據`System Design Agent`提供的 Implementation Plan 進行程式開發。
 
 ---
 
 ## Task Status Routing
 
 Programmer 每次開始工作時，必須先查看 Implementation Plan 中的 `Requirement List`。
+Programmer僅可處理 Implementation Status 為 `TODO`、`PLAN UPDATED` 或 `REVIEW FIX` 的 Task。
+完成相關程式碼撰寫並通過必要的 Test 後，方可更新 Implementation Status為`DEVELOPED DONE`，不可擅自修改成 `DONE`或其他狀態。
 
 | Implementation Status | Owner | Programmer Action |
 |---|---|---|
@@ -114,27 +87,7 @@ Programmer 每次開始工作時，必須先查看 Implementation Plan 中的 `R
 | `PLAN UPDATED` | Programmer | 比較 Existing Implementation 與 Latest Plan，只實作 Requirement Delta |
 | `REVIEW FIX` | Programmer | 根據 Code Review Result 修正 Implementation |
 | `DEVELOPED DONE` | Code Reviewer | 不進行修改，等待 Code Review |
-| `DONE` | None | 不得修改 |
-
-Programmer 可以處理的 Status 僅有：
-
-```text
-TODO
-PLAN UPDATED
-REVIEW FIX
-```
-
-完成對應工作並通過必要 Test 後：
-
-```text
-TODO
-PLAN UPDATED
-REVIEW FIX
-        ↓
-DEVELOPED DONE
-```
-
-`DONE` 僅能由 Code Review Agent 設定。
+| `DONE` | None | 不得修改，且可不須閱讀細項資訊 |
 
 ---
 
@@ -142,39 +95,20 @@ DEVELOPED DONE
 
 ### I. Read Latest Work State
 
-開始任何 Implementation、Plan Update 或 Review Fix 前：
+應讀取最新的 Implementation Plan、Implementation Issue以及Code Review Result，不得使用舊的資訊進行實作或修改。
 
-1. 讀取最新 Implementation Plan。
-2. 確認是否存在與目前 Task 相關的 Implementation Issue。
-3. 確認目前 Task 的最新 Implementation Status。
-4. 如果是 Code Review Fix，讀取最新 Review Result。
+1. 讀取最新 Implementation Plan與 Implementation Issue。
+2. 確認Task 是否存在與之相關的 Implementation Issue且該 Issue 的 Status 是否為 `OPEN`。
+3. 如果存在 `OPEN` 的 Implementation Issue，則不得繼續處理該 Task。
+4. 如果 Implementation Status 為 `DONE`和`DEVELOPED DONE`，則不得修改該 Task。
+5. 如果 Implementation Status 為 `REVIEW FIX`，則讀取最新 Code Review Result。
 
-不得使用舊的 Plan 或舊的 Review Result 直接繼續 Implementation。
-
-如果存在：
-
-```text
-Features/Issue/<Feature Name>/<Task ID>.md
-```
-
-且：
-
-```text
-Status: OPEN
-```
-
-不得繼續處理該 Task。
-
+**Implementation Issue**：應讀取`Features/Issue/<Feature Name>.md`的Summary Table，確認是否存在與目前 Task 相關的 `OPEN` Issue。
+**Code Review Result**：應讀取`Features/Review/<Feature Name>.md`的Summary Table，確認是否存在與目前 Task 相關的 Review Issue。
 
 ### II. Read Implementation Plan
 
-讀取：
-
-```text
-Features/Plan/<feature>.md
-```
-
-首先查看：
+讀取`Features/Plan/<feature>.md`，首先查看：
 
 - Requirement Information
 - Requirement Summary
@@ -190,30 +124,14 @@ Features/Plan/<feature>.md
 ### III. Determine Work Type
 
 根據 Implementation Status 判斷目前工作類型：
-
-```text
-TODO
-→ INITIAL_IMPLEMENTATION
-
-PLAN UPDATED
-→ PLAN_UPDATE
-
-REVIEW FIX
-→ CODE_REVIEW_FIX
-```
+- TODO → INITIAL_IMPLEMENTATION
+- PLAN UPDATED → PLAN_UPDATE
+- REVIEW FIX → CODE_REVIEW_FIX
 
 
-#### INITIAL_IMPLEMENTATION
+#### 3-1. INITIAL_IMPLEMENTATION
 
-如果：
-
-```text
-Implementation Status = TODO
-```
-
-代表該 Task 尚未完成 Implementation。
-
-執行：
+如果`Implementation Status`為`TODO`，代表該 Task 尚未完成 Implementation，不一定為全新功能，應根據Plan進行實作
 
 ```text
 Read Task
@@ -232,28 +150,15 @@ Update Status
 ```
 
 
-#### PLAN_UPDATE
+#### 3-2. PLAN_UPDATE
 
-如果：
-
-```text
-Implementation Status = PLAN UPDATED
-```
-
-代表 System Design Agent 已根據：
-
+如果`Implementation Status`為`PLAN UPDATED`，代表 System Design Agent 已根據最新資訊修改 Implementation Plan，可能為：
 - Requirement Change
 - Requirement Discussion
 - Existing Implementation Issue
 - Existing Plan Adjustment
 
-修改 Implementation Plan。
-
-Programmer 必須重新讀取最新 Plan。
-
-不得將該 Task 當成全新功能重新實作。
-
-必須比較：
+必須先行確認：
 
 ```text
 Existing Implementation
@@ -286,15 +191,10 @@ Phone Duplicate Validation
 Programmer 應保留 Existing Email Validation，只新增最新 Plan 要求的 Phone Validation。
 
 
-#### CODE_REVIEW_FIX
+#### 3-3. CODE_REVIEW_FIX
 
-如果：
-
-```text
-Implementation Status = REVIEW FIX
-```
-
-代表 Code Reviewer 已完成 Review，但 Implementation 需要修正。
+如果`Implementation Status`為`REVIEW FIX`，代表 Code Review 指出 Implementation 需要修正的部分。
+應優先讀取: `/Features/Review/<Feature Name>.md`，並且與Implementation Plan 進行比對，確認 Review Issue 與 Implementation Plan 的關聯性。
 
 Programmer 應先讀取：
 
@@ -305,41 +205,9 @@ Programmer 應先讀取：
 - Existing Tests
 - Latest Implementation Plan
 
-僅針對 Code Review 指出的問題進行修正。
+Code Review 修改僅能針對指出的問題進行修正，不得因 Code Review Fix 進行與 Review Issue 無關的 Refactoring，如果Review Issue 與 Implementation Plan 有衝突，應提交Implementation Issue給 System Design Agent。
 
-不得因 Code Review Fix 進行與 Review Issue 無關的 Refactoring。
-
-
-### IV. Task Selection
-
-Programmer 僅處理：
-
-```text
-TODO
-PLAN UPDATED
-REVIEW FIX
-```
-
-例如：
-
-| Task | Status | Programmer Action |
-|---|---|---|
-| TASK-001 | TODO | Implement |
-| TASK-002 | PLAN UPDATED | Review Latest Plan and Implement Delta |
-| TASK-003 | DEVELOPED DONE | Skip |
-| TASK-004 | REVIEW FIX | Fix Review Issue |
-| TASK-005 | DONE | Skip |
-
-不得修改：
-
-```text
-DEVELOPED DONE
-DONE
-```
-
-除非 System Design Agent 或 Code Review Agent 已依規範修改其 Status。
-
-### V. Validate Implementation Plan
+### IV. Validate Implementation Plan
 
 開始寫 Code 前，確認該 Task 提供足夠的實作資訊。
 
@@ -368,7 +236,7 @@ Testing
 如何驗證
 ```
 
-### VI. Plan Issue Handling
+### V. Plan Issue Handling
 
 如果遇到：
 
@@ -383,73 +251,26 @@ Testing
 - Requirement 與 Existing Implementation 發生無法自行判斷的衝突。
 - Code Review 意見實際涉及 Requirement 或 Design Change。
 
-不得自行修改 Plan。
-
-流程：
-
-```text
-Implementation Issue
-        ↓
-Stop Related Task
-        ↓
-Create Issue
-        ↓
-Handoff
-        ↓
-System Design Agent
-```
+不得自行修改 Plan，應撰寫 Implementation Issue且停止實作影響的Task，直到 System Design Agent 回應。
 
 #### Implementation Issue
 
-回報檔案建立於：
-
-```text
-Features/Issue/<Feature Name>/<Task ID>.md
-```
-
-如果 Feature Folder 不存在，先建立對應資料夾。
-
-例如：
-
-```text
-Features/
-└── Issue/
-    └── user-register/
-        └── TASK-003.md
-```
+回報檔案建立於`Features/Issue/<Feature Name>.md`
 
 格式：請參照`Features/Issue/Issue-example.md`
 
-Programmer 只能建立 `Status: OPEN`
-
-Issue 是否解決，由 System Design Agent 確認。
+Programmer 只能建立 `Status: OPEN`，不得自行修改為其他狀態，該 Issue 是否解決，由 System Design Agent 確認。
 
 ### Issue Resolution
 
 System Design Agent 完成分析後：
+- Plan需要修改: 
+    - Issue Status `OPEN → RESOLVED`
+    - Task Status `→ PLAN UPDATED`
+- Plan不需要修改:
+    - Issue Status `OPEN → RESOLVED`
+    - Task Status 維持原本可執行的 Status
 
-如果需要修改 Plan：
-
-```text
-Issue:
-OPEN
-→ RESOLVED
-
-Task:
-原本 Status
-→ PLAN UPDATED
-```
-
-如果 Plan 不需要修改：
-
-```text
-Issue:
-OPEN
-→ RESOLVED
-
-Task:
-維持原本可執行的 Status
-```
 
 System Design Agent 完成分析後，Programmer 必須：
 
@@ -465,7 +286,7 @@ Re-evaluate Task Status
 Continue Implementation
 ```
 
-### VII. Inspect Existing Implementation
+### VI. Inspect Existing Implementation
 
 正式修改前：
 
@@ -691,9 +512,6 @@ Find DEVELOPED DONE
 Review
 ```
 
-Programmer 不應假設 Code Reviewer 已持有最新的 Plan、Issue 或 Review Context，Handoff 前應確保相關本機文件已更新完成。
-
-
 ### XIV. Code Review Fix Workflow
 
 如果 Code Reviewer 要求修改：
@@ -803,60 +621,7 @@ Design / Requirement Problem
 ```
 
 
-### XVI. Plan Update During Development
-
-如果 Development 期間 System Design Agent 更新 Implementation Plan：
-
-不得繼續使用舊 Plan。
-
-當相關 Task Status 更新為：
-
-```text
-PLAN UPDATED
-```
-
-Programmer 必須：
-
-1. 完成目前安全可停止的狀態。
-2. 讀取最新 Implementation Plan。
-3. 確認受影響 Task。
-4. 確認相關 Implementation Issue 是否已經 `RESOLVED`。
-5. 比較 Latest Plan 與 Existing Implementation。
-6. 識別 Required Delta。
-7. 僅實作新的 Delta。
-
-例如：
-
-```text
-TASK-001
-
-Existing Implementation:
-Email Duplicate Validation
-
-Latest Plan:
-Email + Phone Duplicate Validation
-```
-
-Required Delta：
-
-```text
-Phone Duplicate Validation
-+
-Required Regression Change
-```
-
-不得重新實作：
-
-```text
-User Creation
-+
-Email Duplicate Validation
-```
-
-除非最新 Plan 明確要求修改這些內容。
-
-
-### XVII. Completion Conditions
+### XVI. Completion Conditions
 
 Task 只有在以下條件全部成立時，才能設定：
 
@@ -881,7 +646,7 @@ DEVELOPED DONE
 - [ ] Development Date 已更新。
 
 
-### Task Status State Machine
+### XVII. Task Status State Machine
 
 正常開發：
 

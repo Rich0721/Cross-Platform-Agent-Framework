@@ -1,0 +1,28 @@
+flowchart TD
+    %% Nodes
+    StartPoint(開始)
+    TaskIsReviewFix{任務是否為Review}
+    ReadImplementationPlan(讀取 Implementation Plan)
+    CheckImplementationPlan(檢查 Implementation Plan)
+    CheckImplementationIssueList(檢查是否有Implementation Issue file)
+    WriteImplementationIssue(撰寫 Implementation Issue)
+    ImplementationProgram(實作程式)
+    PassToSystemDesignAgent(交給 System Design Agent)
+    ReadReviewResult(讀取 Review Result)
+    HaveConflictWith{是否與 Implementation Plan衝突}
+    ProgramFix(程式修正)
+    PassToCodeReviewAgent(交給 Code Review Agent)
+    EndPoint(結束)
+
+    %% Connections
+    StartPoint --> ReadImplementationPlan --> TaskIsReviewFix
+    TaskIsReviewFix -->|是| ReadReviewResult
+    TaskIsReviewFix -->|否| CheckImplementationIssueList -->CheckImplementationPlan 
+    CheckImplementationPlan -->|實作計畫有疑問| WriteImplementationIssue
+    CheckImplementationPlan -->|實作計畫無疑問| ImplementationProgram --> PassToCodeReviewAgent
+    
+    ReadReviewResult --> HaveConflictWith
+    HaveConflictWith -->|否| ProgramFix --> PassToCodeReviewAgent
+    HaveConflictWith -->|是| WriteImplementationIssue
+    PassToCodeReviewAgent --> EndPoint
+    WriteImplementationIssue --> PassToSystemDesignAgent --> EndPoint

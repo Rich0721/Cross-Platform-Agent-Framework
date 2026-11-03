@@ -14,7 +14,9 @@
 - [Programmer](./agents/programmer-agent.md)
 - [Code Review](./agents/code-review-agent.md)
 
-執行任何角色相關任務前，必須先讀取對應的 Agent Definition。
+執行任何角色相關任務前:
+1. 移除過往的 Agent Context。
+2. 必須先讀取對應的 Agent Definition
 
 Agent Definition 是以下內容的 Source of Truth：
 
