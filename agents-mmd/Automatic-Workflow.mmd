@@ -1,0 +1,23 @@
+flowchart TD
+    PM(開發者撰寫或修改需求)
+    WaitCallSDA(等待開發者呼叫SDA)
+    SDA(System Design Agent)
+    IsClearRequirement{需求是否不清楚或需要PM決斷}
+    HaveDevelopIssue{是否有開發問題}
+    PA(Programmer Agent)
+    IsPassCodeReview{程式碼審查是否通過}
+    CRA(Code Review Agent)
+    Finish(完成)
+
+    PM -->  WaitCallSDA
+    WaitCallSDA --> SDA
+    SDA --> IsClearRequirement
+    IsClearRequirement --> |不清楚| PM
+    IsClearRequirement --> |清楚| PA
+    PA --> HaveDevelopIssue
+    HaveDevelopIssue --> |有問題| SDA
+    HaveDevelopIssue --> |無問題| CRA
+    CRA --> IsPassCodeReview
+    IsPassCodeReview --> |否| PA
+    IsPassCodeReview --> |是| Finish
+    
