@@ -34,7 +34,7 @@ Requirement Summary: 原本僅能執行YYY功能，現在需要新增XXX功能
 
 主要與*Implementation Steps*數量相應，但*Implementation Steps*是相關實作的細節，而*Requirement List*則是對需求的概括與分類，提供給不同角色快速參考作業進度，相關修改細節需要在*Implementation Steps*中詳細記錄。
 
-| Task ID  | Component Name      | Plan Type | Plan Date  | Implentation Status | Development Date | Code Review Date |
+| Task ID  | Component Name      | Plan Type | Plan Date  | Implementation Status | Development Date | Code Review Date |
 | -------- | ------------------- | --------- | ---------- | ------------------- | ---------------- | ---------------- |
 | TASK-001 | ExampleComponent    | ADD       | YYYY-MM-DD | TODO                | YYYY-MM-DD       | YYYY-MM-DD       |
 | TASK-002 | AnotherComponent    | MODIFY    | YYYY-MM-DD | TODO                | YYYY-MM-DD       | YYYY-MM-DD       |
@@ -45,7 +45,7 @@ Requirement Summary: 原本僅能執行YYY功能，現在需要新增XXX功能
 - Component Name: 填寫元件或功能名稱
 - Plan Type: 填寫計畫類型 (ADD, MODIFY, REMOVE)
 - Plan Date: 填寫計畫日期 (YYYY-MM-DD)，System-design-agent再提出計畫時就必須填寫
-- Implentation Status: 填寫實作計畫的進度 (TODO, DEVELOPED DONE, DOUBLE CHECK, PLAN UPDATED, REVIEW FIX, DONE)
+- Implementation Status: 填寫實作計畫的進度 (TODO, DEVELOPED DONE, DOUBLE CHECK, PLAN UPDATED, REVIEW FIX, DONE)
 - Development Date: 填寫開發日期 (YYYY-MM-DD)，當Programer完成開發後必須填寫
 - Code Review Date: 填寫程式碼審查日期 (YYYY-MM-DD)，當Code Reviewer完成審查後必須填寫
 ```
@@ -60,16 +60,16 @@ Plan Change Type: 需求變更類型，ADD、MODIFY、REMOVE，只有**system-de
 ```
 
 ```text
-Implentation Status: 說明實作計畫的進度，不同的代理人僅可以設定自己的進度，且當SD修改Plan Change Type時，需要將Implentation Status變更為TODO。
+Implementation Status: 說明實作計畫的進度，不同的代理人僅可以設定自己的進度，且當SD修改Plan Change Type時，需要將Implementation Status變更為TODO。
 - system-design-agent:
-    - 如果計畫是從Requirement List新增的Task，無論是ADD、MODIFY或REMOVE，都需要將Implentation Status設定成TODO
-    - 如果該計畫是因為PG提出疑惑，會以DOUBLE CHECK的方式回報，並待SD確認後，將Implentation Status更新為PLAN UPDATED。
+    - 如果計畫是從Requirement List新增的Task，無論是ADD、MODIFY或REMOVE，都需要將Implementation Status設定成TODO
+    - 如果該計畫是因為PG提出疑惑，會以DOUBLE CHECK的方式回報，並待SD確認後，將Implementation Status更新為PLAN UPDATED。
 - programer: 
-    - 如果Implentation Status為TODO, PLAN UPDATED與REVIEW FIX，則根據實作計畫進行開發，完成後更新相應的Implementation Status。
-    - 如果實作過程中需要與SD進行討論，則應將Implentation Status更新為DOUBLE CHECK，待SD確認後再繼續開發。
+    - 如果Implementation Status為TODO, PLAN UPDATED與REVIEW FIX，則根據實作計畫進行開發，完成後更新相應的Implementation Status。
+    - 如果實作過程中需要與SD進行討論，則應將Implementation Status更新為DOUBLE CHECK，待SD確認後再繼續開發。
 - code-reviewer: 
     - 如果Implementation Status為DEVELOPED DONE，則將其作為需要審查的依據，其餘狀態不需要審查。
-    - 進行Review審查時，有需要請PG進行調整時，需要將Implementation Status更新為REVIEW FIX，待PG修正重新Reivew。
+    - 進行Review審查時，有需要請PG進行調整時，需要將Implementation Status更新為REVIEW FIX，待PG修正重新Review。
     - 假設沒有需要修改的地方，則直接將Implementation Status更新為DONE。
 ```
 
