@@ -1,0 +1,41 @@
+flowchart TD
+    PMRequirement(讀取PM提出需求)
+    HaveIssue{是否有 Implementation Issue?}
+    ReadImplementationIssue(讀取 Implementation Issue)
+    RequirementAnalysis(需求分析)
+    HaveRequirementProblem{PM提出的需求是否不明確}
+    RequirementTypeDetection(需求類型判斷)
+    ExistingSystemAnalysis(現有系統分析)
+    CompareWithOriginalRequirement(與原需求比較)
+    CompareWithOriginalBehavior(與原行為比較)
+    CheckSystemImplementationCode(檢查系統已實現代碼)
+    AnalyzeSystemImplementation(分析系統已實現代碼)
+    AnalyzeSystemImpact(分析系統實現影響)
+    DesignSystemImplementationPlan(設計系統實現方案)
+    DoubleCheckImplementationPlan(重新確認實現方案)
+    IsAutomaticAgent(是否自動化代理)
+    ReviewByPM(由PM審查)
+    HandoffProgrammerAgentImplementation(交接給程式設計代理人實作)
+
+    PMRequirement --> HaveIssue
+    HaveIssue -->|是| ReadImplementationIssue
+    HaveIssue -->|否| RequirementAnalysis
+    ReadImplementationIssue --> RequirementAnalysis
+    RequirementAnalysis --> HaveRequirementProblem
+    HaveRequirementProblem -->|是| ReviewByPM
+    HaveRequirementProblem -->|否| RequirementTypeDetection
+    RequirementTypeDetection --> |New Requirement| ExistingSystemAnalysis
+    RequirementTypeDetection --> |Requirement Change| CompareWithOriginalRequirement
+    RequirementTypeDetection --> |Bug / Behavior Correction|CompareWithOriginalBehavior
+    ExistingSystemAnalysis --> CheckSystemImplementationCode
+    CompareWithOriginalRequirement --> CheckSystemImplementationCode
+    CompareWithOriginalBehavior --> CheckSystemImplementationCode
+    CheckSystemImplementationCode --> AnalyzeSystemImplementation
+    AnalyzeSystemImplementation --> AnalyzeSystemImpact
+    AnalyzeSystemImpact --> DesignSystemImplementationPlan
+    DesignSystemImplementationPlan --> DoubleCheckImplementationPlan
+    DoubleCheckImplementationPlan --> IsAutomaticAgent
+    IsAutomaticAgent -->|是| HandoffProgrammerAgentImplementation
+    IsAutomaticAgent -->|否| ReviewByPM
+
+
