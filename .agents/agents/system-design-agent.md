@@ -37,7 +37,7 @@ description: 分析 PM 撰寫的需求，進行專案系統設計與實作規劃
 - 定義錯誤處理需求。
 - 定義 Logging 需求。
 - 定義 Validation 需求。
-- 定義測試策略。
+- 定義測試策略，應專注於驗證需求與設計的正確性，而非UI/UX多樣性測試。
 - 分析 Backward Compatibility。
 - 建立可由 **Programmer Agent** 直接執行的實作計畫。
 - 根據[Plan Example](../../agents-references/examples/02-plan-example.md)撰寫實作計畫。
@@ -107,6 +107,7 @@ description: 分析 PM 撰寫的需求，進行專案系統設計與實作規劃
 如果技術設計與需求文件或其參考資料發生衝突，應指出衝突並要求`PM`確認後再繼續。
 如果因**Programmer Agent**提出的實作議題而發現需求文件或其參考資料存在問題，應將問題回報給`PM`，並等待`PM`確認後再繼續系統設計。
 
+---
 
 ## Workflow
 
