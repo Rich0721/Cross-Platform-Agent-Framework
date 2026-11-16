@@ -1,46 +1,39 @@
-# Project Agent Instructions
+# Multi-Agent Architecture
 
-## Purpose
+## Overview
+這是一個多代理系統的架構說明，描述各個代理之間的互動與協作方式與相關的資料夾結構安排，與個別代理人相關的職責、工作流程、指令與技能，應根據個別資料夾定義進行詳細規劃。
 
-此檔案為統一管理專案內的 AI Agent 定義與工作流程的跨平台共用入口，目前尚未依賴特定平台，且僅提供:  Cursor、Codex 與 GitHub Copilot使用。
+## Folder Structure
+| Folder Path    | Description                              |
+| -------------- | ---------------------------------------- |
+| .agents/skills | 存放專案所需要的技能模組，提供每個代理人使用 |
+| .agents/agents | 存放各個代理人的職責與工作流程說明，並透過`AGENTS.md` 進行統一管理 |
+| ./instructions | 存放專門針對不同開發情境所需要的指令與規範，例如:Python Code Standard、後端MVC架構等 |
+| ./instructions/common-instructions.md | 存放此專案中，所有代理人皆需要遵守的共用指令與規範 |
+| ./instructions/folder-structure.md | 存放專案中關於資料夾結構的指令與規範 |
+| .github        | 主要存放Github相關代理人所需的基本配置，但是會使它導讀至共用配置檔案，減少重複撰寫代理人的職責與流程說明 |
 
-本專案採用固定的 Agent Roles，並將 Agent Workflow、Skills、Project Instructions 與 Work Artifacts 分離管理，避免不同平台維護重複規則。
+```text
+project-root/
+├─ .agents/
+│  ├─ skills/
+│  ├─ agents/
+├─ instructions/
+│  ├─ common-instructions.md
+│  └─ folder-structure.md
+└─ .github/
+```
 
-## Agent Roles
+## Agents
 
-角色定義：
-
-- [System Design](./agents/system-design-agent.md)
-- [Programmer](./agents/programmer-agent.md)
-- [Code Review](./agents/code-review-agent.md)
-
-執行任何角色相關任務前:
-1. 移除過往的 Agent Context。
-2. 必須先讀取對應的 Agent Definition
-
-Agent Definition 是以下內容的 Source of Truth：
-
-- Role
-- Responsibilities
-- Prohibited Actions
-- Workflow
-- Task Status Routing
-- Handoff
-- Completion Conditions
-
-不得因使用不同 AI 平台、Programming Language 或 Framework 而改變 Agent Role。
+此章節主要說明各個代理人的職責、工作流程以及代理人之間的互動方式。
+- [System Design Agent](.agents/agents/system-design-agent.md)
+- [Code Review Agent](.agents/agents/code-review-agent.md)
+- [Programmer Agent](.agents/agents/programmer-agent.md)
 
 
-## Agent Routing
-
-依照使用者目前要求選擇對應角色。
-
-### System Design
-
-以下工作使用： `agents/system-design-agent.md`
-
-例如：
-
+### System Design Agent
+主要負責閱讀`PM`所提出的需求，並根據專案需求進行系統設計與規範，並將相關計畫內容整理與紀錄至指定資料夾中，主要工作為：
 - Requirement Analysis
 - Requirement Change Analysis
 - Bug / Behavior Analysis
@@ -50,26 +43,9 @@ Agent Definition 是以下內容的 Source of Truth：
 - Implementation Plan
 - Plan Update
 
-### Programmer
-
-以下工作使用：`agents/programmer-agent.md`
-
-例如：
-
-- Application Implementation
-- Unit Test Implementation
-- Regression Fix
-- Plan Update Implementation
-- Code Review Fix
-
-Programmer 應以最新 Implementation Plan 與 Task Status 作為工作依據。
-
-### Code Review
-
-以下工作使用：`agents/code-review-agent.md`
-
-例如：
-
+### Code Review Agent
+主要負責對程式碼進行審查，確保程式碼符合專案規範與設計要求，並將審查結果與回饋紀錄至指定資料夾中。
+主要工作為：
 - Implementation Review
 - Code Quality Review
 - Plan Compliance Review
@@ -77,293 +53,50 @@ Programmer 應以最新 Implementation Plan 與 Task Status 作為工作依據�
 - Regression Risk Review
 - Review Fix Validation
 
+### Programmer Agent
+主要負責根據`System Design Agent`所提供的系統設計與規範進行程式開發，並將開發過程中的問題與進度紀錄至指定資料夾中。同時根據`Features/Review`中的回饋進行程式碼修改與優化，確保最終程式碼符合專案需求與規範。
+主要工作為：
+- Application Implementation
+- Unit Test Implementation
+- Regression Fix
+- Plan Update Implementation
+- Code Review Fix
+
+### Agents Working Method
+
+代理人工作模式：**Manual**
+
+請根據*代理人工作方法*進行對應的操作與配置
+- **Manual**：切換代理人之間的作業由使用者自行操作與控制，包含想要使用的代理人與模型的選擇與切換，相關[工作流程](./agents-references/images/Manual-Workflow.mmd)
+- **Automatic**：代理人之間的作業由系統自動進行，根據預先設定的規則與流程，自動選擇適當的代理人與模型完成任務，相關[工作流程](./agents-references/images/Automatic-Workflow.mmd)
+
+
 ## Skills
+*Skills*主要根據專案需求提供代理人所需要的技能模組，代理人根據需求選取並使用相應的技能模組完成任務，可根據專案需求進行擴充與調整。
+
+## Instructions
+*Instructions*主要放置專案中各個代理人應遵守的指令與規範，包含共用指令與專屬指令，代理人需根據需求遵循相應的指令與規範完成任務。
+- `common-instructions.md`：存放此專案中，所有代理人皆需要遵守的共用指令與規範，包含開發程式語言與版本、專案選用的技術與工具、前後端的資料夾開發架構等，以及哪些行為須`參考專屬指令與規範`。
+- `Other instructions`：根據不同代理人的需求與專案情境，存放專屬於特定代理人的指令與規範，例如針對前端開發、後端開發或資料庫管理等的專屬指令與規範，**必須撰寫進common-instructions.md參考引用**。
+- `folder-structure.md`：存放專案資料夾結構的說明，包含各個資料夾的用途與規範，代理人應依照此指令進行資料夾的管理與使用。
+
+代理人應嚴格遵守專案中的指令與規範，並從`common-instructions.md`閱讀相關規範，必要時須要根據內容參考`Other instructions`中的專屬指令與規範。相關開發的檔案位置應依照`folder-structure.md`中的規範進行管理與使用，如果有*不明確*或*未涵蓋*的情況，應及時向專案負責人說明，並由專案負責人協助調整相關文件，*禁止*自行決定或忽略相關規範。
+
+## Features Folder
+`Features`資料夾主要是為了讓`PM`、`開發人員`與`代理人`之間進行`需求說明`、`流程圖`、`情境範例`等交流與管理，讓代理人間也可以透過`Plan`、`Review`等文件進行協作與溝通，但相關資料夾結構應依照`folder-structure.md`中的規範進行管理與使用，但主要結構需要有以下資料夾
+| Folder   | Description |
+| -------- | ----------- |
+| Document | 存放需求說明、流程圖與情境規範的文件，所有代理人都**禁止**修改內部文件 |
+| Plan     | 由System Design Agent根據需求所制定的計畫與設計文件，所有代理人應依照此計畫進行相關工作，僅有**System Design Agent**可以大量修改此文件；**Code Review Agent**與**Programmer Agent**僅能根據計畫進行操作與執行，並且修改指定的部份內容 |
+| Issue    | 由**開發人員**或**Programmer Agent**提出的問題與缺陷，*System Design Agent*應根據內容進行分析與調整相關計畫，提供給**Programmer Agent**進行修正與處理 |
+| Review   | 由**Code Review Agent**對程式碼進行審查後的回饋與建議，**Programmer Agent**應根據回饋進行程式碼修改與優化，確保最終程式碼符合專案需求與規範 |
+
+### Features Markdown Files Illustration
+
+| File   | Description |
+| -------- | ----------- |
+| [需求說明範例](./agents-references/examples/01-feature-examples.md)| 需求說明範例，內容包含需求說明、Request body、Response body、Gherkin、mmd等相關文件與資料，由`PM`與`開發人員`自行撰寫，**代理人**僅根據內容回饋、提出建議與設計計畫，無法自行修改原始需求內容 |
+| [計畫範例](./agents-references/examples/02-plan-example.md)| **System Design Agent**參考需求文件後，根據此範例架構進行實作計畫的撰寫，**Code Review Agent**與**Programmer Agent**僅能根據計畫進行操作與執行，並且僅能修改**Requirement List** |
+| [議題範例](./agents-references/examples/03-issue-example.md)| 由`開發人員`或`Programmer Agent`提出的問題與缺陷範例，供**System Design Agent**進行分析與調整相關計畫，並提供給**Programmer Agent**進行修正與處理 |
+| [審查範例](./agents-references/examples/04-review-example.md)| 由`Code Review Agent`對程式碼進行審查後的回饋與建議範例，供`Programmer Agent`根據回饋進行程式碼修改與優化 |
 
-所有跨平台共用 Skills 位於：`.agents/skills/`
-
-每個 Skill 使用：`.agents/skills/<skill-name>/SKILL.md`
-
-Skills 應根據目前 Task 的 Technology Context 動態選擇。
-
-例如：
-
-### Python Backend
-
-- `python`
-- `python-backend`
-- `python-testing`
-- `git`
-
-### TypeScript Backend
-
-- `typescript`
-- `typescript-backend`
-- `typescript-testing`
-- `git`
-
-### TypeScript Frontend
-
-- `typescript`
-- `typescript-frontend`
-- `typescript-testing`
-- `git`
-
-### Database
-
-- `database`
-- `sql`
-- `testing`
-- `git`
-
-不是所有 Task 都需要載入所有 Skills，只使用與目前 Task 有關的 Skills。
-
-
-## Skill Boundary
-
-Skills 僅負責提供：
-
-- Technical Standards
-- Design Principles
-- Implementation Practices
-- Review Criteria
-- Testing Practices
-- Tool-specific Procedures
-
-Skills 不得覆蓋或修改 Agent Definition 中的：
-
-- Role
-- Responsibilities
-- Workflow
-- Task Status Routing
-- Handoff
-- Completion Conditions
-
-如果 Skill 與 Agent Workflow 發生衝突：
-
-- Agent Definition 負責 Workflow 與 Responsibility。
-- Skill 負責 Technical Practice。
-
-## Technology Context
-
-執行 Task 前，必須確認目前 Technology Context。
-
-Technology Context 可以包含：
-
-- Programming Language
-- Framework
-- Application Layer
-- Testing Framework
-- Database
-- Infrastructure Technology
-
-Technology Context 應優先從以下來源判斷：
-
-1. Implementation Plan
-2. Existing Project Structure
-3. Existing Source Code
-4. File Type / File Extension
-
-例如：
-
-```text
-.py
-→ Python Skill
-
-.ts
-→ TypeScript Skill
-
-.tsx
-→ TypeScript + Frontend Skill
-
-.py + FastAPI
-→ Python + Backend Skill
-
-.ts + NestJS
-→ TypeScript + Backend Skill
-
-.sql
-→ SQL / Database Skill
-```
-
-Programming Language 或 Framework 只影響 Relevant Skills。
-
-不得因此切換 Agent Role 或改變 Agent Workflow。
-
-## Project Instructions
-
-主要的指令應參考 `instructions/project.md`，將由此文件統一管理。
-如果更好管理相關`instructions`，可以將其拆分為多個子文件，並在 `instructions/project.md` 中統一引用。
-
-Project Instructions 用於描述目前 Repository 特有的：
-
-- Architecture
-- Git Workflow
-- Project Constraints
-- Framework Decisions
-- Repository Conventions
-- Code Standards
-
-如果 Project Instruction 與 Skill 的 Default Technical Rule 衝突：`Project Instruction` 優先。
-如果 Project Instruction 沒有定義相關規則： `使用 Relevant Skill 的規範`。
-
-
-## Work Artifacts
-
-### Requirement
-
-PM或Developer需將 Business Requirement 保存於 `Features/Document/`，作為`system-design-agent`分析並生成 Implementation Plan 的依據，且將相關生成文件統一保存於 `Features/Plan/`。
-
-### Implementation Plan
-
-`Features/Plan/`為`system-design-agent`分析 Business Requirement 後生成的 Implementation Plan 的保存位置，且`programmer-agent`應依此 Implementation Plan 進行實作。`code-review-agent`應依此 Implementation Plan 進行程式碼審查。
-
-### Implementation Issue
-
-`Features/Issue/`主要放置跨Agent之間的討論。
-- `programmer-agent`於開發上有疑問可以撰寫 Implementation Issue，請`system-design-agent`確認需求後回覆。
-- `system-design-agent`若排查需求後，無法處理問題將由PM調整需求說明後，重新進行分析並生成新的 Implementation Plan。
-
-不得將 Implementation Issue 自動視為新的 Business Requirement。
-
-### Implementation Review
-
-`Features/Review/`主要放置跨Agent之間的程式碼審查討論。
-- `code-review-agent`應依 Implementation Plan 進行程式碼審查，並將審查結果保存於此。
-- `programmer-agent`應根據 Implementation Review 的反饋進行程式碼修改。
-
-
-## Source of Truth
-
-各資訊的主要 Source of Truth：
-
-```text
-Business Requirement
-→ Features/Document/
-
-Agent Role / Workflow
-→ agents/
-
-Technical Skills
-→ .agents/skills/
-
-Project-specific Rules
-→ instructions/
-
-Implementation Plan
-→ Features/Plan/
-
-Implementation Discussion
-→ Features/Issue/
-```
-
-同一規則應只保留一個主要 Source of Truth。
-
-不得在不同平台的設定檔中複製完整 Agent Workflow 或 Skill。
-
-
-## Platform Integration
-
-此檔案與 `agents/`、`.agents/skills/` 為跨平台 Canonical Core。
-
-平台專屬設定只能作為 Adapter。
-
-### Cursor
-
-Cursor 應以本檔案作為 Project Agent Instructions 的主要入口。
-如需 Cursor-specific Rules，可放於：`.cursor/rules/`
-Cursor-specific Rules 不得重新複製完整 Agent Workflow 或 Skills。
-
-### Codex
-
-Codex 應以本檔案作為 Repository Agent Instructions 的主要入口。
-
-Agent Role、Workflow 與 Skills 仍以：
-
-- `agents/`
-- `.agents/skills/`
-
-為 Source of Truth。
-
-### GitHub Copilot
-
-GitHub Copilot Custom Agents 可放於：
-
-`.github/agents/`
-
-`.github/agents/` 僅保存 GitHub Copilot-specific metadata，例如：
-
-- model
-- tools
-- handoffs
-- target
-
-完整 Role 與 Workflow 應引用：`agents/`
-
-不得在 `.github/agents/` 再維護一份完整且獨立的 Workflow。
-
-
-## Platform Adapter Rule
-
-平台專屬檔案只允許處理：
-
-- Platform Metadata
-- Tool Configuration
-- Model Configuration
-- Platform-specific Handoff Configuration
-- Platform-specific Routing
-
-不得成為以下內容的第二份 Source of Truth：
-
-- Agent Workflow
-- Programming Standards
-- Architecture Rules
-- Git Rules
-- Testing Rules
-
-
-## General Execution Order
-
-執行工作時，依照以下順序取得 Context：
-
-```text
-User Request
-    ↓
-AGENTS.md
-    ↓
-Relevant Agent Definition
-    ↓
-Project Instructions
-    ↓
-Relevant Skills
-    ↓
-Requirement / Plan / Issue
-    ↓
-Existing Project
-    ↓
-Execute Agent Workflow
-```
-
-Agent Workflow 不因 Skill 或 Platform 不同而改變。
-
-
-## Final Principle
-
-本專案採用：
-
-```text
-Agent = Role + Workflow
-
-Skill = Technical Capability
-
-Project Instruction = Repository-specific Rule
-
-Work Artifact = Requirement / Plan / Issue / Review
-
-Platform Adapter = Platform-specific Configuration
-```
-
-核心目標：
-
-> Cursor、Codex 與 GitHub Copilot 可以使用不同的平台能力，但共同遵循同一份 Agent Workflow、Skills 與 Project Rules。
-
-任何跨平台整合都應優先避免 Duplicate Rules 與 Configuration Drift。
