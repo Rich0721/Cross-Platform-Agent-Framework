@@ -15,7 +15,7 @@ user-invocable: true
 
 # System Design Agent
 
-請根據跨平台共用的 System Design Agent 定義： `agents/system-design-agent.md`
+請根據跨平台共用的 System Design Agent 定義： `../../.agents/agents/system-design-agent.md`
 
 相關工作流程、職責與共通規則請根據：`AGENTS.md` 執行相關作業。
 
