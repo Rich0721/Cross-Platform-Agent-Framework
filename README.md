@@ -1,129 +1,54 @@
-# Agent Config Framework
+# Cross-Platform Agent Framework
 
-此專案主要是為了提供一個在使用不同代理人系統(Github Copilot、Codex、Cursor)時，能夠不需要手動或重新設定就可以使用同一個Agent的框架進行設定，方便開發者在多代理人環境下進行協作與開發。
-不過因不同系統間有些許不同的設定與操作方式，使用者仍需依照各系統的特性進行適當的調整。
+此專案是為了做出一個可以跨平台開發的代理人框架，方便開發者在不同專案底下都可以使用相同的工作方式進行開發的作業流程。
 
-## 資料夾結構
-
+## 目錄架構
 ```text
-agent-config/
-├── .agents/
-├── .github/
-├── agents/
-│   ├── system-design-agent.md
-│   ├── programmer-agent.md
-│   └── code-review-agent.md
-├── Features/
-│   ├── Document/
-│   ├── Plan/
-│   ├── Issue/
-│   └── Review/
-├── instructions/
+.
+├── .agents
+│   ├── agents
+│   └── skills
+├── instructions
+│   ├── code-standard-python.md
+│   ├── code-standard-react.md
+│   ├── code-standard-sql.md
+│   └── code-standard-typescript.md
 ├── AGENTS.md
-├── README.md
-```
-### 詳細說明
-| 資料夾 | 說明 |
-|--------|------|
-| `.agents/skill/` | 存放代理人需要使用到的技能包，方便在不同代理人系統中共用。 |
-| `.github/` | GitHub相關設定檔，包含VS Code可以呼叫到指定的Agent，但內容只會引導至閱讀另外一個文件 |
-| `agents/` | 存放各種代理人設定文件 |
-| `Features/` | 存放需求文件、計畫、問題與審查等資料夾 |
-| `Features/Document` | 存放需求文件(此部分由使用者撰寫) |
-| `Features/Plan` | 存放系統設計與實作計畫 |
-| `Features/Issue` | 存放開發過程中提出的問題 |
-| `Features/Review` | 存放程式碼審查意見 |
-| `instructions/` | 存放該專案的相關架構檔案 |
-| `instructions/project.md` | 專案相關架構說明文件，所有Agent都會先根據此文件進行相關設定，也可以透過此文件進行額外參考 |
-| `AGENTS.md` | 代理人總覽文件 |
-| `README.md` | 專案說明文件 |
-
-
-## 功能
-目前此框架設定可以使用`Github Copilot`、`Codex`和`Cursor`，進行客製化代理人開發，主要分成三種代理人(Agent):
-- [System Design](./agents/system-design-agent.md)：專門負責系統設計與架構規劃。
-- [Programmer](./agents/programmer-agent.md)：專門負責程式開發與實作。
-- [Code Review](./agents/code-review-agent.md)：專門負責程式碼審查與品質控制。
-
-
-### System Design Agent
-此Agent主要根據使用者撰寫的需求文件(Features/Document)進行系統設計與架構規劃，並不會直接進行程式開發。
-#### Workflow
-```text
-    閱讀需求文件(Features/Document)
-            |
-            ▼
-  進行系統設計與實作計畫(Features/Plan)
-            |
-            ▼
-  確認是否有Programmer Agent的開發疑問(Feature/Issue)
-            |
-            ▼
-  完成系統設計與實作計畫(Features/Plan)
+├── symbolic_link.sh
+├── update_link.sh
+└── README.md
 ```
 
-如果工作過程中因`需求文件`未完整導致Agent無法進行相關設計的話，它會列出相對問題請使用者補充完整，才有辦法進行分析，否則將無法進行Programmer的動作。
-呼叫Agent可以參考下列輸入(並且引入參考需求):
-```text
-請開始需求分析與系統設計設計
+| 目錄路徑 |  說明 |
+| -------- | -------- |
+| .agents/agents | 代理人定義檔案，目前總共有三個代理人：**System Design Agent**、**Programmer Agent**、**Code Review Agent** |
+| .agents/skills | 代理人技能檔案 |
+| instructions | 開發指引與規範文件 |
+| AGENTS.md | 代理人總覽文件 |
+| symbolic_link.sh | 建立符號連結的腳本 |
+| update_link.sh | 更新符號連結的腳本 |
+| README.md | 專案說明文件 |
+
+
+## 代理人工作模式
+`AGENTS.md`中定義不同代理人間要如何進行交付
+- **Automatic**：代理人之間的作業由**系統自動進行**，根據預先設定的規則與流程，自動選擇適當的代理人與模型完成任務，相關工作流程請參考`AGENTS.md`中的說明
+- **Manual**：切換代理人之間的作業由**使用者自行操作與控制**，包含想要使用的代理人與模型的選擇與切換，相關工作流程請參考`AGENTS.md`中的說明。
+相關切換模型也請於`AGENTS.md`中進行設定與管理。
+
+## 使用說明
+使用`symbolic_link.sh`建立符號連結與`update_link.sh`更新符號連結，方便在不同專案中共用相同的代理人與技能。
+注意：如果**AGENTS.md**中有新增的代理人或技能，請先更新符號連結，確保各專案使用的都是最新版本，且會同步更新相關的符號連結。
+
+```bash
+./symbolic_link.sh repo
 ```
 
-
-### Programmer Agent
-此Agent主要負責程式開發與實作，根據System Design Agent提供的系統設計與實作計畫(Features/Plan)進行程式開發，並在開發過程中提出可能的問題(Feature/Issue)給System Design Agent確認。
-
-#### Workflow
-```text
-    接收系統設計與實作計畫(Features/Plan)
-            |
-            ▼
-  進行程式開發與實作
-            |
-            ▼
-  提出開發過程中的問題(Feature/Issue)
-            |
-            ▼
-  確認問題後繼續開發
-            |
-            ▼
-  完成程式開發與實作
-```
-呼叫Agent可以參考下列輸入(並且引入參考的計畫):
-```text
-請開始進行開發
+若代理人或技能有更新，可以使用 `update_link.sh` 更新符號連結，確保各專案使用的都是最新版本。
+```bash
+./update_link.sh repo
 ```
 
-### Code Review Agent
-此Agent主要負責程式碼審查與品質控制，根據Programmer Agent提交的程式碼進行審查，並提出改進建議(Feature/Review)給Programmer Agent。
-
-#### Workflow
-```text
-接收程式碼審查請求(Features/Plan)
-            |
-            ▼
-  進行程式碼審查
-            |
-            ▼
-  提出審查意見(Feature/Review)
-            |
-            ▼
-  確認問題後程式碼修改
-            |
-            ▼
-  完成程式碼審查
-```
-呼叫Agent可以參考下列輸入(並且引入參考的計畫):
-```text
-請開始進行Code Reivew
-```
-
-## Skills
-
-此專案中的代理人可以使用的技能包存放於`.agents/skill/`資料夾中，方便在不同代理人系統中共用。使用者可以根據需求`新增`或`修改`技能包，以擴展代理人的能力。
-
-## 未來展望
-目前三個Agent都屬於在同一個使用者的環境下運作，所以工作流程未納入使用`git`進行版本控制的情境，相關版控都是由使用者自行管理。未來可能會考慮整合版本控制功能，使多代理人協作更加順暢。
-
-## 測試專案
-以下為作者用來測試此多代理人框架的專案列表：
-1. [後端管理系統](https://github.com/Rich0721/manage-backend)
+### 注意事項
+1. 如果有使用軟連結在不同的REPO，**代理人模式**會因為不同的符號連結修改而受到影響，如果需要在不同專案有不同的模式，請自行移除`AGENTS.md`的連結，並在各專案中建立各自的`AGENTS.md`。
+2. 此專案的目標是為了提供一個統一的跨平台代理人開發框架，使開發者能夠在不同專案中使用相同的代理人與技能，提升開發效率與一致性，使用者可以自行管理各專案的代理人與技能設定，並透過符號連結保持與主專案的一致性。

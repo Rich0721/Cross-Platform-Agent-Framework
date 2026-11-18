@@ -64,11 +64,23 @@ project-root/
 
 ### Agents Working Method
 
-代理人工作模式：**Manual**
+代理人工作模式：**Automatic**
 
 請根據*代理人工作方法*進行對應的操作與配置
 - **Manual**：切換代理人之間的作業由使用者自行操作與控制，包含想要使用的代理人與模型的選擇與切換，相關[工作流程](./agents-references/images/Manual-Workflow.mmd)
 - **Automatic**：代理人之間的作業由系統自動進行，根據預先設定的規則與流程，自動選擇適當的代理人與模型完成任務，相關[工作流程](./agents-references/images/Automatic-Workflow.mmd)
+
+#### Agents Working Model
+如果代理人工作模式為**Automatic**，則根據使用工具(ex: `codex`, `cursor`等)與模型自動切換使用對應的代理人模型進行相關的作業。
+
+##### Using Codex
+如果`開發者`選擇使用`Codex`當作開發工具，則根據下列規則自動切換使用對應的代理人模型進行相關的作業，如果使用者無法選擇預設模型，請提醒使用修改預設模型。
+
+| Agent | Model | 推理深度 |
+| ------ | ----- | -------- |
+| System Design Agent | GPT-6 sol | 輕度 |
+| Code Review Agent | GPT-6 sol | 輕度 |
+| Programmer Agent | GPT-6 Luna | 高 |
 
 
 ## Skills
