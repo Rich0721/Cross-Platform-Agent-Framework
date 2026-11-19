@@ -88,6 +88,7 @@ for source in \
     "$FRAMEWORK/.agents/agents" \
     "$FRAMEWORK/.agents/skills" \
     "$FRAMEWORK/instructions" \
+    "$FRAMEWORK/agents-references" \
     "$FRAMEWORK/AGENTS.md"
 do
     if [[ ! -e "$source" ]]; then
@@ -152,6 +153,10 @@ update_link \
     "$PROJECT/instructions/shared"
 
 update_link \
+    "$FRAMEWORK/agents-references" \
+    "$PROJECT/agents-references"
+
+update_link \
     "$FRAMEWORK/AGENTS.md" \
     "$PROJECT/AGENTS.md"
 
@@ -175,6 +180,7 @@ IGNORE_PATHS=(
     "/.agents/skills"
     "/instructions/shared"
     "/AGENTS.md"
+    "/agents-references"
 )
 
 add_gitignore() {

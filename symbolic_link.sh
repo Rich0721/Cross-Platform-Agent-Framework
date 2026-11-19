@@ -45,6 +45,7 @@ for source in \
     "$FRAMEWORK/.agents/agents" \
     "$FRAMEWORK/.agents/skills" \
     "$FRAMEWORK/instructions" \
+    "$FRAMEWORK/agents-references" \
     "$FRAMEWORK/AGENTS.md"
 do
     if [[ ! -e "$source" ]]; then
@@ -90,6 +91,10 @@ create_link \
     "$PROJECT/instructions/shared"
 
 create_link \
+    "$FRAMEWORK/agents-references" \
+    "$PROJECT/agents-references"
+
+create_link \
     "$FRAMEWORK/AGENTS.md" \
     "$PROJECT/AGENTS.md"
 
@@ -117,6 +122,7 @@ IGNORE_PATHS=(
     "/.agents/agents"
     "/.agents/skills"
     "/instructions/shared"
+    "/agents-references"
     "/AGENTS.md"
 )
 
